@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCaseStudies, addCaseStudy } from "@/lib/case-studies";
 
 export async function GET() {
-  const studies = getCaseStudies();
+  const studies = await getCaseStudies();
   return NextResponse.json(studies);
 }
 
@@ -21,6 +21,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
-  const study = addCaseStudy({ title, advertiser, thumbnailUrl, caseStudyUrl });
+  const study = await addCaseStudy({ title, advertiser, thumbnailUrl, caseStudyUrl });
   return NextResponse.json(study, { status: 201 });
 }

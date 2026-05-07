@@ -1,27 +1,41 @@
-import fs from "fs";
-import path from "path";
+import { supabase } from "./supabase";
 import { CaseStudy } from "./types";
 
-const DATA_FILE = path.join(process.cwd(), "data", "case-studies.json");
+export async function getCaseStudies(): Promise<CaseStudy[]> {
+  const { data, error } = await supabase
+    .from("case_studies")
+    .select("*")
+    .order("created_at", { ascending: false });
 
-export function getCaseStudies(): CaseStudy[] {
-  const raw = fs.readFileSync(DATA_FILE, "utf-8");
-  const studies: CaseStudy[] = JSON.parse(raw);
-  return studies.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
+  if (error) throw new Error(error.message);
+  return (data ?? []).map(toStudy);
 }
 
-export function addCaseStudy(
+export async function addCaseStudy(
   study: Omit<CaseStudy, "id" | "createdAt">
-): CaseStudy {
-  const studies = getCaseStudies();
-  const newStudy: CaseStudy = {
-    ...study,
-    id: Date.now().toString(),
-    createdAt: new Date().toISOString(),
+): Promise<CaseStudy> {
+  const { data, error } = await supabase
+    .from("case_studies")
+    .insert({
+      title: study.title,
+      advertiser: study.advertiser,
+      thumbnail_url: study.thumbnailUrl,
+      case_study_url: study.caseStudyUrl,
+    })
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  return toStudy(data);
+}
+
+function toStudy(row: Record<string, string>): CaseStudy {
+  return {
+    id: row.id,
+    title: row.title,
+    advertiser: row.advertiser,
+    thumbnailUrl: row.thumbnail_url,
+    caseStudyUrl: row.case_study_url,
+    createdAt: row.created_at,
   };
-  studies.unshift(newStudy);
-  fs.writeFileSync(DATA_FILE, JSON.stringify(studies, null, 2));
-  return newStudy;
 }

@@ -5,8 +5,8 @@ import Gallery from "@/components/Gallery";
 
 export const revalidate = 0;
 
-export default function HomePage() {
-  const studies = getCaseStudies();
+export default async function HomePage() {
+  const studies = await getCaseStudies();
 
   return (
     <div className="flex min-h-screen flex-col bg-[#0f0f0f]">
