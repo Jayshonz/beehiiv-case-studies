@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CaseStudy } from "@/lib/types";
 import CaseStudyCard from "./CaseStudyCard";
 import CaseStudyModal from "./CaseStudyModal";
@@ -11,6 +12,8 @@ interface Props {
 }
 
 export default function Gallery({ studies }: Props) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [selected, setSelected] = useState<CaseStudy | null>(null);
   const [query, setQuery] = useState("");
 
@@ -23,6 +26,33 @@ export default function Gallery({ studies }: Props) {
         s.advertiser.toLowerCase().includes(q)
     );
   }, [studies, query]);
+
+  // Open modal from URL param on load
+  useEffect(() => {
+    const id = searchParams.get("study");
+    if (id) {
+      const match = studies.find((s) => s.id === id);
+      if (match) setSelected(match);
+    }
+  }, [searchParams, studies]);
+
+  const openStudy = useCallback(
+    (study: CaseStudy) => {
+      setSelected(study);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("study", study.id);
+      router.replace(`?${params.toString()}`, { scroll: false });
+    },
+    [router, searchParams]
+  );
+
+  const closeStudy = useCallback(() => {
+    setSelected(null);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("study");
+    const qs = params.toString();
+    router.replace(qs ? `?${qs}` : "/", { scroll: false });
+  }, [router, searchParams]);
 
   return (
     <>
@@ -52,7 +82,7 @@ export default function Gallery({ studies }: Props) {
             <CaseStudyCard
               key={study.id}
               study={study}
-              onClick={setSelected}
+              onClick={openStudy}
             />
           ))}
         </div>
@@ -62,8 +92,8 @@ export default function Gallery({ studies }: Props) {
       <CaseStudyModal
         study={selected}
         studies={filtered}
-        onClose={() => setSelected(null)}
-        onNavigate={setSelected}
+        onClose={closeStudy}
+        onNavigate={openStudy}
       />
     </>
   );

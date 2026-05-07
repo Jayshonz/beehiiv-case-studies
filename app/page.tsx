@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getCaseStudies } from "@/lib/case-studies";
 import Header from "@/components/Header";
 import Gallery from "@/components/Gallery";
@@ -52,7 +53,9 @@ export default function HomePage() {
               </span>
             </h2>
           </div>
-          <Gallery studies={studies} />
+          <Suspense>
+            <Gallery studies={studies} />
+          </Suspense>
         </section>
       </main>
 
