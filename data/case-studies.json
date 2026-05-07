@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1",
+    "title": "How MorningBrew Drove 3x ROAS with beehiiv Ads",
+    "advertiser": "Morning Brew",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1495020689067-958852a7765e?w=600&q=80",
+    "caseStudyUrl": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80",
+    "createdAt": "2024-11-01T00:00:00.000Z"
+  },
+  {
+    "id": "2",
+    "title": "Superhuman Grew Paid Subscribers 40% in 90 Days",
+    "advertiser": "Superhuman",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=600&q=80",
+    "caseStudyUrl": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&q=80",
+    "createdAt": "2024-10-15T00:00:00.000Z"
+  },
+  {
+    "id": "3",
+    "title": "Notion's Newsletter Ad Campaign: $1.2M in Pipeline",
+    "advertiser": "Notion",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1517842645767-c639042777db?w=600&q=80",
+    "caseStudyUrl": "https://images.unsplash.com/photo-1512314889357-e157c22f938d?w=1200&q=80",
+    "createdAt": "2024-09-20T00:00:00.000Z"
+  },
+  {
+    "id": "4",
+    "title": "Figma's Ad Network Test: 5x CTR vs. Social",
+    "advertiser": "Figma",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&q=80",
+    "caseStudyUrl": "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=1200&q=80",
+    "createdAt": "2024-08-30T00:00:00.000Z"
+  },
+  {
+    "id": "5",
+    "title": "Linear Reached 200K Developers in Two Weeks",
+    "advertiser": "Linear",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1555066931-4365d14431b4?w=600&q=80",
+    "caseStudyUrl": "https://images.unsplash.com/photo-1607706189992-eae578626c86?w=1200&q=80",
+    "createdAt": "2024-08-10T00:00:00.000Z"
+  },
+  {
+    "id": "6",
+    "title": "Calm's Q4 Newsletter Push: 22% Conversion Lift",
+    "advertiser": "Calm",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&q=80",
+    "caseStudyUrl": "https://images.unsplash.com/photo-1545389336-cf090694435e?w=1200&q=80",
+    "createdAt": "2024-07-22T00:00:00.000Z"
+  }
+]
