@@ -2,9 +2,18 @@
 
 import { useState, FormEvent } from "react";
 import Link from "next/link";
+import { createClient } from "@supabase/supabase-js";
 import { ArrowLeft, Plus, Eye, EyeOff, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 
 type Status = "idle" | "loading" | "success" | "error";
+
+function getAdminSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const key =
+    process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  return createClient(url, key);
+}
 
 export default function AdminClient() {
   const [password, setPassword] = useState("");
@@ -19,22 +28,13 @@ export default function AdminClient() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
-  async function handleAuth(e: FormEvent) {
+  function handleAuth(e: FormEvent) {
     e.preventDefault();
     setAuthError("");
-    // Verify by attempting a POST with no body — will return 401 or 400
-    const res = await fetch("/api/case-studies", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${password}`,
-      },
-      body: JSON.stringify({}),
-    });
-    if (res.status === 401) {
+    const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
+    if (!adminPassword || password !== adminPassword) {
       setAuthError("Incorrect password.");
     } else {
-      // 400 (missing fields) or 201 both mean auth passed
       setAuthenticated(true);
     }
   }
@@ -45,19 +45,15 @@ export default function AdminClient() {
     setErrorMsg("");
 
     try {
-      const res = await fetch("/api/case-studies", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${password}`,
-        },
-        body: JSON.stringify({ title, advertiser, thumbnailUrl, caseStudyUrl }),
+      const supabase = getAdminSupabase();
+      const { error } = await supabase.from("case_studies").insert({
+        title,
+        advertiser,
+        thumbnail_url: thumbnailUrl,
+        case_study_url: caseStudyUrl,
       });
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error ?? "Something went wrong");
-      }
+      if (error) throw new Error(error.message);
 
       setStatus("success");
       setTitle("");
@@ -133,7 +129,7 @@ export default function AdminClient() {
                 Unlock
               </button>
               <p className="mt-3 text-center text-xs text-[#6b7280]">
-                Set <code className="text-[#9ca3af]">ADMIN_PASSWORD</code> in
+                Set <code className="text-[#9ca3af]">NEXT_PUBLIC_ADMIN_PASSWORD</code> in
                 your .env file.
               </p>
             </form>

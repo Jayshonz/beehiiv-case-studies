@@ -1,12 +1,20 @@
-import { Suspense } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 import { getCaseStudies } from "@/lib/case-studies";
+import { CaseStudy } from "@/lib/types";
 import Header from "@/components/Header";
 import Gallery from "@/components/Gallery";
 
-export const revalidate = 0;
+export default function HomePage() {
+  const [studies, setStudies] = useState<CaseStudy[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export default async function HomePage() {
-  const studies = await getCaseStudies();
+  useEffect(() => {
+    getCaseStudies()
+      .then(setStudies)
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <div className="flex min-h-screen flex-col bg-[#0f0f0f]">
@@ -48,14 +56,18 @@ export default async function HomePage() {
           <div className="mb-8 flex items-baseline justify-between">
             <h2 className="text-lg font-semibold text-white">
               Case Studies
-              <span className="ml-2 text-sm font-normal text-[#6b7280]">
-                ({studies.length})
-              </span>
+              {!loading && (
+                <span className="ml-2 text-sm font-normal text-[#6b7280]">
+                  ({studies.length})
+                </span>
+              )}
             </h2>
           </div>
-          <Suspense>
+          {loading ? (
+            <div className="py-20 text-center text-sm text-[#6b7280]">Loading…</div>
+          ) : (
             <Gallery studies={studies} />
-          </Suspense>
+          )}
         </section>
       </main>
 
